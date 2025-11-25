@@ -4,6 +4,15 @@ damit die drei randos nicht vergessen:
 cmake --build build
 cp build/MarbleMarcher ./
 
+todo: 
+setup fullscreen via ingame button (maybe future resolutions) 
+
+fix music not working when starting the game wiht music off 
+
+eat kebab
+
+
+
 
 [![Build Status](https://travis-ci.org/jgoldfar/MarbleMarcher.svg?branch=master)](https://travis-ci.org/jgoldfar/MarbleMarcher)
 

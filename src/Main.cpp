@@ -22,6 +22,7 @@
 #include "Scores.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/OpenGL.hpp>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -372,6 +373,15 @@ int main(int argc, char *argv[]) {
                 for (int i = 0; i < num_level_music; ++i) {
                   level_music[i].setVolume(GetVol());
                 }
+            } else if (selected == Overlays::FULLSCREEN){
+              game_settings.fullscreen = !game_settings.fullscreen;
+              if (game_settings.fullscreen){
+                 screen_size = sf::VideoMode::getDesktopMode();
+                  window_style = sf::Style::Fullscreen;
+            
+                  sf::RenderWindow window(screen_size, "Marble Marcher", window_style, settings);
+                  window.display(); 
+              }
             }
           } else if (game_mode == LEVELS) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::L0, Overlays::BACK2);

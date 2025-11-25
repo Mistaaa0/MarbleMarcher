@@ -59,6 +59,18 @@ const Level all_levels[num_levels] = {
     false,                                           //Is Planet
     "Hole In One"),                                  //Description
 
+   Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin"),
   //Level 4
   Level(
     1.65f, 0.37f, 5.26f,                             //Scale, Angle1, Angle2
@@ -228,7 +240,7 @@ const Level all_levels[num_levels] = {
     Eigen::Vector3f(0.0f, 2.1431f, 0.0f),            //Marble Position
     Eigen::Vector3f(0.0, -2.12f, 0.0),               //Flag Position
     -999.0f,                                         //Death Barrier
-    true,                                            //Is Planet
+    false,                                            //Is Planet
     "Planet Crusher",                                //Description
     0.0f, 0.08f, 0.0f),                              //Animation
 
@@ -350,6 +362,7 @@ const Level all_levels[num_levels] = {
     -4.0f,                                           //Death Barrier
     false,                                           //Is Planet
     "Fatal Fissures"),                               //Description
+
 };
 
 Level::Level(float s, float a1, float a2,

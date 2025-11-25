@@ -37,4 +37,5 @@ public:
 
   bool   mute;
   int    mouse_sensitivity;
+  bool   fullscreen;
 };

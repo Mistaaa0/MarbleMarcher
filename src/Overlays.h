@@ -18,6 +18,7 @@
 #include "Settings.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Window/WindowStyle.hpp>
 
 extern Settings game_settings;
 
@@ -38,6 +39,7 @@ public:
     QUIT,
     MUSIC,
     MOUSE,
+    FULLSCREEN,
     CONTROLS_L,
     CONTROLS_R,
     OPTIONS_L, 
