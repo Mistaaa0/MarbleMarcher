@@ -28,6 +28,7 @@ public:
     PLAY,
     LEVELS,
     CONTROLS,
+    OPTIONS, 
     SCREEN_SAVER,
     EXIT,
     CREDITS,
@@ -39,6 +40,8 @@ public:
     MOUSE,
     CONTROLS_L,
     CONTROLS_R,
+    OPTIONS_L, 
+    OPTIONS_R, 
     BACK,
     L0, L1, L2, L3, L4,
     L5, L6, L7, L8, L9,
@@ -60,11 +63,13 @@ public:
 
   void UpdateMenu(float mouse_x, float mouse_y);
   void UpdateControls(float mouse_x, float mouse_y);
+  void UpdateOptions(float mouse_x, float mouse_y);
   void UpdateLevels(float mouse_x, float mouse_y);
   void UpdatePaused(float mouse_x, float mouse_y);
 
   void DrawMenu(sf::RenderWindow& window);
   void DrawControls(sf::RenderWindow& window);
+  void DrawOptions(sf::RenderWindow& window);
   void DrawTimer(sf::RenderWindow& window, int t, bool is_high_score);
   void DrawLevelDesc(sf::RenderWindow& window, int level);
   void DrawFPS(sf::RenderWindow& window, int fps);

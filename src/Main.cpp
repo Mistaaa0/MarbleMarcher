@@ -51,6 +51,7 @@ enum GameMode {
   PAUSED,
   SCREEN_SAVER,
   CONTROLS,
+  OPTIONS, 
   LEVELS,
   CREDITS,
   MIDPOINT
@@ -272,7 +273,7 @@ int main(int argc, char *argv[]) {
           if (game_mode == MAIN_MENU) {
             window.close();
             break;
-          } else if (game_mode == CONTROLS || game_mode == LEVELS) {
+          } else if (game_mode == CONTROLS || game_mode == LEVELS || game_mode == OPTIONS) {
             game_mode = MAIN_MENU;
             scene.SetExposure(1.0f);
           } else if (game_mode == SCREEN_SAVER) {
@@ -338,6 +339,9 @@ int main(int argc, char *argv[]) {
               LockMouse(window);
             } else if (selected == Overlays::CONTROLS) {
               game_mode = CONTROLS;
+            } 
+              else if (selected == Overlays::OPTIONS){
+              game_mode = OPTIONS;
             } else if (selected == Overlays::LEVELS) {
               game_mode = LEVELS;
               overlays.GetLevelPage() = 0;
@@ -350,6 +354,11 @@ int main(int argc, char *argv[]) {
               break;
             }
           } else if (game_mode == CONTROLS) {
+            const Overlays::Texts selected = overlays.GetOption(Overlays::BACK, Overlays::BACK);
+            if (selected == Overlays::BACK) {
+              game_mode = MAIN_MENU;
+            }
+          } else if (game_mode == OPTIONS) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::BACK, Overlays::BACK);
             if (selected == Overlays::BACK) {
               game_mode = MAIN_MENU;
@@ -448,6 +457,9 @@ int main(int argc, char *argv[]) {
     } else if (game_mode == CONTROLS) {
       scene.UpdateCamera();
       overlays.UpdateControls((float)mouse_pos.x, (float)mouse_pos.y);
+    } else if (game_mode == OPTIONS) {
+      scene.UpdateCamera();
+      overlays.UpdateOptions((float)mouse_pos.x, (float)mouse_pos.y); 
     } else if (game_mode == LEVELS) {
       scene.UpdateCamera();
       overlays.UpdateLevels((float)mouse_pos.x, (float)mouse_pos.y);
@@ -461,6 +473,9 @@ int main(int argc, char *argv[]) {
       const float force_ud =
         (all_keys[sf::Keyboard::Down] || all_keys[sf::Keyboard::S] ? -1.0f : 0.0f) +
         (all_keys[sf::Keyboard::Up] || all_keys[sf::Keyboard::W] ? 1.0f : 0.0f);
+
+      const float force_jump = 
+        (all_keys[sf::Keyboard::Space] ? 1.0f : 0.0f);
 
       //Collect mouse input
       const sf::Vector2i mouse_delta = mouse_pos - screen_center;
@@ -476,7 +491,7 @@ int main(int argc, char *argv[]) {
       const float cam_z = mouse_wheel * wheel_sensitivity;
 
       //Apply forces to marble and camera
-      scene.UpdateMarble(force_lr, force_ud);
+      scene.UpdateMarble(force_lr, force_ud, force_jump);
       scene.UpdateCamera(cam_lr, cam_ud, cam_z, mouse_clicked);
     } else if (game_mode == PAUSED) {
       overlays.UpdatePaused((float)mouse_pos.x, (float)mouse_pos.y);
@@ -519,6 +534,8 @@ int main(int argc, char *argv[]) {
       overlays.DrawControls(window);
     } else if (game_mode == LEVELS) {
       overlays.DrawLevels(window);
+    } else if (game_mode == OPTIONS){
+        overlays.DrawOptions(window); 
     } else if (game_mode == PLAYING) {
       if (scene.GetMode() == Scene::ORBIT && scene.GetMarble().x() < 998.0f) {
         overlays.DrawLevelDesc(window, scene.GetLevel());

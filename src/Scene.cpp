@@ -272,19 +272,21 @@ void Scene::UpdateCamera(float dx, float dy, float dz, bool speedup) {
   }
 }
 
-void Scene::UpdateMarble(float dx, float dy) {
+void Scene::UpdateMarble(float dx, float dy, float dz) {
   //Ignore other modes
   if (cam_mode != MARBLE) {
     return;
   }
 
-  //Normalize force if too big
-  const float mag2 = dx*dx + dy*dy;
+  marble_jump = marble_rad * 0.2f; // value for jump strength 
+  //Normalize force if too big 
+  const float mag2 = dx*dx + dy*dy; // +dz*dz 
   if (mag2 > 1.0f) {
     const float mag = std::sqrt(mag2);
     dx /= mag;
     dy /= mag;
   }
+
 
   if (free_camera) {
     cam_pos += cam_mat.block<3,1>(0,2) * (-marble_rad * dy * 0.5f);
@@ -296,7 +298,7 @@ void Scene::UpdateMarble(float dx, float dy) {
     float max_delta_v = 0.0f;
     for (int i = 0; i < num_phys_steps; ++i) {
       float force = marble_rad * gravity / num_phys_steps;
-      if (gravity_type == 1) { force *= 0.25f; } else if (gravity_type == 2) { force *= 4.0f; }
+      if (gravity_type == 1) { force *= 0.25f; } else if (gravity_type == 2) { force *= 4.0f; } // ursprünglich 0.25 udn 4.0
       if (level_copy.planet) {
         marble_vel -= marble_pos.normalized() * force;
       } else {
@@ -322,8 +324,13 @@ void Scene::UpdateMarble(float dx, float dy) {
     if (hyper_speed) { f *= 4.0f; }
     const float cs = std::cos(cam_look_x);
     const float sn = std::sin(cam_look_x);
-    const Eigen::Vector3f v(dx*cs - dy*sn, 0.0f, -dy*cs - dx*sn);
+    const Eigen::Vector3f v(dx*cs - dy*sn, 0.0f,  -dy*cs - dx*sn);
     marble_vel += (marble_mat * v) * f;
+    
+    // y-coordinate calculation when jumping 
+    if (onGround && dz > 0.0f) {   
+    marble_vel.y() = marble_jump;   
+    }
 
     //Apply friction
     marble_vel *= (onGround ? ground_friction : air_friction);

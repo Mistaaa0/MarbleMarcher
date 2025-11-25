@@ -65,7 +65,7 @@ public:
   void ResetLevel();
   void ResetCheats();
 
-  void UpdateMarble(float dx=0.0f, float dy=0.0f);
+  void UpdateMarble(float dx=0.0f, float dy=0.0f, float dz=0.0f);
   void UpdateCamera(float dx=0.0f, float dy=0.0f, float dz=0.0f, bool speedup=false);
 
   void SnapCamera();
@@ -118,9 +118,11 @@ private:
   Eigen::Vector3f cam_pos_smooth;
 
   float           marble_rad;
+  float           marble_jump; // jump value  
   Eigen::Vector3f marble_pos;
   Eigen::Vector3f marble_vel;
   Eigen::Matrix3f marble_mat;
+
 
   Eigen::Vector3f flag_pos;
 

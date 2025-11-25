@@ -56,8 +56,10 @@ Overlays::Texts Overlays::GetOption(Texts from, Texts to) {
 
 void Overlays::UpdateMenu(float mouse_x, float mouse_y) {
   //Update text boxes
-  MakeText("Marble\nMarcher", 60, 20, 72, sf::Color::White, all_text[TITLE]);
-  MakeText("Play", 80, 230, 60, sf::Color::White, all_text[PLAY]);
+  MakeText("Ballin Ballin", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
+
+  MakeText("Play", 80, 160, 60, sf::Color::White, all_text[PLAY]);
+  MakeText("Options", 80, 230, 60, sf::Color::White, all_text[OPTIONS]); 
   MakeText("Levels", 80, 300, 60, sf::Color::White, all_text[LEVELS]);
   MakeText("Controls", 80, 370, 60, sf::Color::White, all_text[CONTROLS]);
   MakeText("Screen Saver", 80, 440, 60, sf::Color::White, all_text[SCREEN_SAVER]);
@@ -83,6 +85,19 @@ void Overlays::UpdateControls(float mouse_x, float mouse_y) {
   //Check if mouse intersects anything
   UpdateHover(BACK, BACK, mouse_x, mouse_y);
 }
+
+void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
+  //Update text boxes
+  MakeText("HIER KOMMEN ALLE OPTIONEN REIN", 40, 100, 46, sf::Color::White, all_text[OPTIONS_L]);
+  MakeText("Back", 60, 550, 40, sf::Color::White, all_text[BACK]);
+  //A little extra vertical spacing
+  all_text[OPTIONS_L].setLineSpacing(1.1f);
+  all_text[OPTIONS_R].setLineSpacing(1.1f);
+
+  //Check if mouse intersects anything
+  UpdateHover(BACK, BACK, mouse_x, mouse_y);
+}
+
 
 void Overlays::UpdateLevels(float mouse_x, float mouse_y) {
   //Update text boxes
@@ -147,10 +162,17 @@ void Overlays::DrawMenu(sf::RenderWindow& window) {
   }
 }
 
-void Overlays::DrawControls(sf::RenderWindow& window) {
-  for (int i = CONTROLS_L; i <= BACK; ++i) {
+void Overlays::DrawOptions(sf::RenderWindow& window) {
+  for (int i = OPTIONS_L; i <= BACK + 1; ++i) {
     window.draw(all_text[i]);
   }
+}
+
+
+void Overlays::DrawControls(sf::RenderWindow& window) {
+  window.draw(all_text[CONTROLS_L]);
+  window.draw(all_text[CONTROLS_R]);
+  window.draw(all_text[BACK]);
 }
 
 void Overlays::DrawTimer(sf::RenderWindow& window, int t, bool is_high_score) {
