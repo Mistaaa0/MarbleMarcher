@@ -90,7 +90,7 @@ void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
   //Update text boxes
   MakeText("HIER KOMMEN ALLE OPTIONEN REIN", 40, 100, 46, sf::Color::White, all_text[OPTIONS_L]);
   const char* music_txt = (game_settings.mute ? "Music:  Off" : "Music:  On");
-  MakeText(music_txt, 410, 500, 40, sf::Color::White, all_text[MUSIC]);
+  MakeText(music_txt, 100, 200, 40, sf::Color::White, all_text[MUSIC]);
 
   //Update mouse sensitivity setting
   const char* mouse_txt = "Mouse Sensitivity:  High";
@@ -184,6 +184,7 @@ void Overlays::DrawOptions(sf::RenderWindow& window) {
 
   window.draw(all_text[OPTIONS_L]);
   window.draw(all_text[BACK]);
+  window.draw(all_text[PAUSED]); 
   window.draw(all_text[MOUSE]); 
 }
 
@@ -192,6 +193,7 @@ void Overlays::DrawControls(sf::RenderWindow& window) {
   window.draw(all_text[CONTROLS_L]);
   window.draw(all_text[CONTROLS_R]);
   window.draw(all_text[BACK]);
+
 }
 
 void Overlays::DrawTimer(sf::RenderWindow& window, int t, bool is_high_score) {

@@ -359,10 +359,13 @@ int main(int argc, char *argv[]) {
               game_mode = MAIN_MENU;
             }
           } else if (game_mode == OPTIONS) {
-            const Overlays::Texts selected = overlays.GetOption(Overlays::BACK, Overlays::BACK);
+            const Overlays::Texts selected = overlays.GetOption(Overlays::MOUSE, Overlays::BACK);
             if (selected == Overlays::BACK) {
               game_mode = MAIN_MENU;
+            } else if (selected == Overlays::MOUSE) {
+              game_settings.mouse_sensitivity = (game_settings.mouse_sensitivity + 1) % 3;
             }
+
           } else if (game_mode == LEVELS) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::L0, Overlays::BACK2);
             if (selected == Overlays::BACK2) {
