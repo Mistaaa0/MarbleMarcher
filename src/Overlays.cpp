@@ -56,7 +56,7 @@ Overlays::Texts Overlays::GetOption(Texts from, Texts to) {
 
 void Overlays::UpdateMenu(float mouse_x, float mouse_y) {
   //Update text boxes
-  MakeText("Ballin Ballin", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
+  MakeText("Mike Oxmall", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
 
   MakeText("Play", 80, 160, 60, sf::Color::White, all_text[PLAY]);
   MakeText("Options", 80, 230, 60, sf::Color::White, all_text[OPTIONS]); 
@@ -89,13 +89,28 @@ void Overlays::UpdateControls(float mouse_x, float mouse_y) {
 void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
   //Update text boxes
   MakeText("HIER KOMMEN ALLE OPTIONEN REIN", 40, 100, 46, sf::Color::White, all_text[OPTIONS_L]);
+  const char* music_txt = (game_settings.mute ? "Music:  Off" : "Music:  On");
+  MakeText(music_txt, 410, 500, 40, sf::Color::White, all_text[MUSIC]);
+
+  //Update mouse sensitivity setting
+  const char* mouse_txt = "Mouse Sensitivity:  High";
+  if (game_settings.mouse_sensitivity == 1) {
+    mouse_txt = "Mouse Sensitivity:  Medium";
+  } else if (game_settings.mouse_sensitivity == 2) {
+    mouse_txt = "Mouse Sensitivity:  Low";
+  }
+  MakeText(mouse_txt, 410, 550, 40, sf::Color::White, all_text[MOUSE]);
+
+
   MakeText("Back", 60, 550, 40, sf::Color::White, all_text[BACK]);
   //A little extra vertical spacing
   all_text[OPTIONS_L].setLineSpacing(1.1f);
   all_text[OPTIONS_R].setLineSpacing(1.1f);
 
   //Check if mouse intersects anything
-  UpdateHover(BACK, BACK, mouse_x, mouse_y);
+  UpdateHover(BACK, BACK, mouse_x, mouse_y); 
+  UpdateHover(CONTINUE, MOUSE, mouse_x, mouse_y);
+
 }
 
 
@@ -163,9 +178,13 @@ void Overlays::DrawMenu(sf::RenderWindow& window) {
 }
 
 void Overlays::DrawOptions(sf::RenderWindow& window) {
-  for (int i = OPTIONS_L; i <= BACK + 1; ++i) {
-    window.draw(all_text[i]);
-  }
+  // for (int i = OPTIONS_L; i <= BACK + 1; ++i) {
+  //   window.draw(all_text[i]);
+  // }
+
+  window.draw(all_text[OPTIONS_L]);
+  window.draw(all_text[BACK]);
+  window.draw(all_text[MOUSE]); 
 }
 
 
