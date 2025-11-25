@@ -359,13 +359,20 @@ int main(int argc, char *argv[]) {
               game_mode = MAIN_MENU;
             }
           } else if (game_mode == OPTIONS) {
-            const Overlays::Texts selected = overlays.GetOption(Overlays::MOUSE, Overlays::BACK);
+            const Overlays::Texts selected = overlays.GetOption(Overlays::CONTINUE, Overlays::BACK);
             if (selected == Overlays::BACK) {
               game_mode = MAIN_MENU;
             } else if (selected == Overlays::MOUSE) {
               game_settings.mouse_sensitivity = (game_settings.mouse_sensitivity + 1) % 3;
+            } else if (selected == Overlays::MUSIC) {
+              game_settings.mute = !game_settings.mute;
+              if (!game_settings.mute){
+                  menu_music.play();
+              } else {(menu_music.stop()); }
+                for (int i = 0; i < num_level_music; ++i) {
+                  level_music[i].setVolume(GetVol());
+                }
             }
-
           } else if (game_mode == LEVELS) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::L0, Overlays::BACK2);
             if (selected == Overlays::BACK2) {

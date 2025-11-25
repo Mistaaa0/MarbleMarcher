@@ -99,7 +99,7 @@ void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
   } else if (game_settings.mouse_sensitivity == 2) {
     mouse_txt = "Mouse Sensitivity:  Low";
   }
-  MakeText(mouse_txt, 410, 550, 40, sf::Color::White, all_text[MOUSE]);
+  MakeText(mouse_txt, 100, 300, 40, sf::Color::White, all_text[MOUSE]);
 
 
   MakeText("Back", 60, 550, 40, sf::Color::White, all_text[BACK]);
@@ -108,9 +108,7 @@ void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
   all_text[OPTIONS_R].setLineSpacing(1.1f);
 
   //Check if mouse intersects anything
-  UpdateHover(BACK, BACK, mouse_x, mouse_y); 
-  UpdateHover(CONTINUE, MOUSE, mouse_x, mouse_y);
-
+  UpdateHover(CONTINUE, BACK, mouse_x, mouse_y); 
 }
 
 
@@ -185,6 +183,7 @@ void Overlays::DrawOptions(sf::RenderWindow& window) {
   window.draw(all_text[OPTIONS_L]);
   window.draw(all_text[BACK]);
   window.draw(all_text[PAUSED]); 
+  window.draw(all_text[MUSIC]); 
   window.draw(all_text[MOUSE]); 
 }
 
