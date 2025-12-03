@@ -11,6 +11,7 @@ fix music not working when starting the game wiht music off
 
 eat kebab
 
+"Weißt du was cool wäre? wenn sich die kugelfarbe mit cheats ändert"
 
 
 

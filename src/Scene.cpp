@@ -43,6 +43,8 @@ static const float ground_ratio = 1.15f;
 static const int mus_switches[num_level_music] = {9, 15, 21, 24};
 static const int num_levels_midpoint = 15;
 
+// new cheat value 
+
 static void ModPi(float& a, float b) {
   if (a - b > pi) {
     a -= 2 * pi;
@@ -237,6 +239,8 @@ void Scene::ResetCheats() {
   hyper_speed = false;
   disable_motion = false;
   zoom_to_scale = false;
+
+  jump_type = 0; 
 }
 
 void Scene::UpdateCamera(float dx, float dy, float dz, bool speedup) {
@@ -279,6 +283,10 @@ void Scene::UpdateMarble(float dx, float dy, float dz) {
   }
 
   marble_jump = marble_rad * 0.2f; // value for jump strength 
+
+  if (jump_type == 1 ){ marble_jump = marble_rad * 0.5f;} 
+  else if (jump_type == 2){marble_jump = marble_rad * 2;}
+  
   //Normalize force if too big 
   const float mag2 = dx*dx + dy*dy; // +dz*dz 
   if (mag2 > 1.0f) {
@@ -832,6 +840,15 @@ void Scene::Cheat_Gravity() {
   if (!enable_cheats) { return; }
   gravity_type = (gravity_type + 1) % 3;
 }
+
+void Scene::Cheat_Jump(){
+  
+  if (!enable_cheats) { return; }
+  jump_type = (jump_type + 1) % 3; 
+
+}
+
+
 void Scene::Cheat_HyperSpeed() {
   if (!enable_cheats) { return; }
   hyper_speed = !hyper_speed;

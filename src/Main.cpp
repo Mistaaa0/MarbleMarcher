@@ -24,6 +24,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string>
@@ -295,7 +296,7 @@ int main(int argc, char *argv[]) {
         } else if (keycode == sf::Keyboard::F1) {
           if (game_mode == PLAYING && high_scores.HasCompleted(num_levels - 1)) {
             show_cheats = !show_cheats;
-            scene.EnbaleCheats();
+            scene.EnableCheats();         // changed Enbale to Enable   
           }
         } else if (keycode == sf::Keyboard::C) {
           scene.Cheat_ColorChange();
@@ -311,6 +312,9 @@ int main(int argc, char *argv[]) {
           scene.Cheat_Motion();
         } else if (keycode == sf::Keyboard::P) {
           scene.Cheat_Planet();
+
+        } else if (keycode == sf::Keyboard::J){
+          scene.Cheat_Jump(); 
         } else if (keycode == sf::Keyboard::Z) {
           if (scene.GetParamMod() == -1) {
             scene.Cheat_Zoom();

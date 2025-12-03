@@ -40,7 +40,7 @@ public:
   void SetFlag(float x, float y, float z);
   void SetMode(CamMode mode);
   void SetExposure(float e) { exposure = e; }
-  void EnbaleCheats() { enable_cheats = true; }
+  void EnableCheats() { enable_cheats = true; }
 
   const Eigen::Vector3f& GetMarble() const { return marble_pos; };
   float GetCamLook() const { return cam_look_x_smooth; }
@@ -86,6 +86,8 @@ public:
   void Cheat_Planet();
   void Cheat_Zoom();
   void Cheat_Param(int param);
+
+  void Cheat_Jump(); 
 
 protected:
   void SetLevel(int level);
@@ -150,6 +152,7 @@ private:
   bool            enable_cheats;
   bool            free_camera;
   int             gravity_type;
+  int             jump_type; 
   int             param_mod;
   bool            ignore_goal;
   bool            hyper_speed;
