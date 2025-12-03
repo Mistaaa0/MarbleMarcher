@@ -312,7 +312,6 @@ int main(int argc, char *argv[]) {
           scene.Cheat_Motion();
         } else if (keycode == sf::Keyboard::P) {
           scene.Cheat_Planet();
-
         } else if (keycode == sf::Keyboard::J){
           scene.Cheat_Jump(); 
         } else if (keycode == sf::Keyboard::Z) {

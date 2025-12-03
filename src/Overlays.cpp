@@ -359,6 +359,7 @@ void Overlays::DrawCheats(sf::RenderWindow& window) {
     "[ C ] Color change\n"
     "[ F ] Free camera\n"
     "[ G ] Gravity strength\n"
+    "[ J ] Jump Height\n"
     "[ H ] Hyperspeed toggle\n"
     "[ I ] Ignore goal\n"
     "[ M ] Motion disable\n"
