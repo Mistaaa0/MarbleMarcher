@@ -27,6 +27,7 @@ public:
   enum Texts {
     TITLE,
     PLAY,
+    MULTIPLAYER,
     LEVELS,
     CONTROLS,
     OPTIONS, 
@@ -51,6 +52,8 @@ public:
     NEXT,
     PREV,
     BACK2,
+    SINGLE_PLAYER,
+    MULTIPLAYER_CHOICE,
     NUM_TEXTS
   };
   static const int LEVELS_PER_PAGE = 15;
@@ -83,6 +86,8 @@ public:
   void DrawSumTime(sf::RenderWindow& window, int t);
   void DrawCheatsEnabled(sf::RenderWindow& window);
   void DrawCheats(sf::RenderWindow& window);
+  void UpdateChooseMultiplayer(float mouse_x, float mouse_y);
+  void DrawChooseMultiplayer(sf::RenderWindow& window);
 
 protected:
   void MakeText(const char* str, float x, float y, float size, const sf::Color& color, sf::Text& text, bool mono=false);

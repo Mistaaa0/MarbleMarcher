@@ -89,14 +89,15 @@ public:
 
   void Cheat_Jump(); 
 
-protected:
+
+  void UpdateCameraOnly(float dx, float dy, float dz);
   void SetLevel(int level);
+protected:
 
   void UpdateIntro(bool ssaver);
   void UpdateOrbit();
   void UpdateDeOrbit(float dx, float dy, float dz);
   void UpdateNormal(float dx, float dy, float dz);
-  void UpdateCameraOnly(float dx, float dy, float dz);
   void UpdateGoal();
   void MakeCameraRotation();
 

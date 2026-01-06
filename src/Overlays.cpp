@@ -59,11 +59,12 @@ void Overlays::UpdateMenu(float mouse_x, float mouse_y) {
   MakeText("Mike Oxmall", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
 
   MakeText("Play", 80, 160, 60, sf::Color::White, all_text[PLAY]);
-  MakeText("Options", 80, 230, 60, sf::Color::White, all_text[OPTIONS]); 
-  MakeText("Levels", 80, 300, 60, sf::Color::White, all_text[LEVELS]);
-  MakeText("Controls", 80, 370, 60, sf::Color::White, all_text[CONTROLS]);
-  MakeText("Screen Saver", 80, 440, 60, sf::Color::White, all_text[SCREEN_SAVER]);
-  MakeText("Exit", 80, 510, 60, sf::Color::White, all_text[EXIT]);
+  MakeText("Multiplayer", 80, 230, 60, sf::Color::White, all_text[MULTIPLAYER]);
+  MakeText("Options", 80, 300, 60, sf::Color::White, all_text[OPTIONS]); 
+  MakeText("Levels", 80, 370, 60, sf::Color::White, all_text[LEVELS]);
+  MakeText("Controls", 80, 440, 60, sf::Color::White, all_text[CONTROLS]);
+  MakeText("Screen Saver", 80, 510, 60, sf::Color::White, all_text[SCREEN_SAVER]);
+  MakeText("Exit", 80, 580, 60, sf::Color::White, all_text[EXIT]);
   MakeText("\xA9""2019 CodeParade 1.1.1\nMusic by PettyTheft", 16, 652, 32, sf::Color::White, all_text[CREDITS], true);
   all_text[TITLE].setLineSpacing(0.76f);
   all_text[CREDITS].setLineSpacing(0.9f);
@@ -408,3 +409,23 @@ void Overlays::UpdateHover(Texts from, Texts to, float mouse_x, float mouse_y) {
     }
   }
 }
+
+void Overlays::UpdateChooseMultiplayer(float mouse_x, float mouse_y) {
+  //Update text boxes
+  MakeText("Choose Game Mode", 540, 200, 48, sf::Color::White, all_text[TITLE]);
+  MakeText("Single Player", 370, 350, 50, sf::Color::White, all_text[SINGLE_PLAYER]);
+  MakeText("Multiplayer", 750, 350, 50, sf::Color::White, all_text[MULTIPLAYER_CHOICE]);
+  
+  all_text[TITLE].setLineSpacing(0.76f);
+  
+  //Check if mouse intersects anything
+  UpdateHover(SINGLE_PLAYER, MULTIPLAYER_CHOICE, mouse_x, mouse_y);
+}
+
+void Overlays::DrawChooseMultiplayer(sf::RenderWindow& window) {
+  window.draw(all_text[TITLE]);
+  window.draw(all_text[SINGLE_PLAYER]);
+  window.draw(all_text[MULTIPLAYER_CHOICE]);
+}
+
+

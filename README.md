@@ -1,15 +1,29 @@
 # Marble Marcher
 
-damit die drei randos nicht vergessen: 
+
+TODO: 
+kein Pause Screen im Multiplayer 
+Countdown für level beginn bei multiplayer
+Timer für multiplayer
+Flaggen Pfeil multiplayer 
+planet crusher tod durch fallen funktioniert nicht 
+
+maus steuert nur linke kamera 
+
+
+level game mode selection ist nicht zentriert 
+
+option paused bug :w
+
+option fullscreen 
+
+
+
+
+
+
 cmake --build build
 cp build/MarbleMarcher ./
-
-todo: 
-setup fullscreen via ingame button (maybe future resolutions) 
-
-fix music not working when starting the game wiht music off 
-
-eat kebab
 
 "Weißt du was cool wäre? wenn sich die kugelfarbe mit cheats ändert"
 

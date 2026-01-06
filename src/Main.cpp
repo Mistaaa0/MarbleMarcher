@@ -50,6 +50,8 @@ static const float target_fps = 60.0f;
 enum GameMode {
   MAIN_MENU,
   PLAYING,
+  PLAYING_MULTIPLAYER,
+  CHOOSE_MULTIPLAYER,
   PAUSED,
   SCREEN_SAVER,
   CONTROLS,
@@ -65,6 +67,7 @@ static bool all_keys[sf::Keyboard::KeyCount] = { 0 };
 static bool mouse_clicked = false;
 static bool show_cheats = false;
 static GameMode game_mode = MAIN_MENU;
+static int selected_level = 0;  //Track which level was selected for multiplayer choice
 
 float GetVol() {
   if (game_settings.mute) {
@@ -216,6 +219,7 @@ int main(int argc, char *argv[]) {
 
   //Create the render texture if needed
   sf::RenderTexture renderTexture;
+  // Main render texture used only when fullscreen to composite final image
   if (fullscreen) {
     renderTexture.create(resolution->width, resolution->height, settings);
     renderTexture.setSmooth(true);
@@ -223,16 +227,41 @@ int main(int argc, char *argv[]) {
     window.setActive(false);
   }
 
+  // Create two offscreen render textures for splitscreen rendering (left/right).
+  const unsigned int left_w = resolution->width / 2;
+  const unsigned int right_w = resolution->width - left_w;
+  const unsigned int view_h = resolution->height;
+  sf::RenderTexture renderLeft;
+  sf::RenderTexture renderRight;
+  renderLeft.create(left_w, view_h, settings);
+  renderLeft.setSmooth(true);
+  renderRight.create(right_w, view_h, settings);
+  renderRight.setSmooth(true);
+
   //Create the fractal scene
   Scene scene(level_music);
+  Scene scene1(level_music);
+  Scene scene2(level_music);
   const sf::Glsl::Vec2 window_res((float)resolution->width, (float)resolution->height);
   shader.setUniform("iResolution", window_res);
   scene.Write(shader);
 
-  //Create screen rectangle
+  //Create screen rectangle (full) and view rectangles (per-viewport)
   sf::RectangleShape rect;
   rect.setSize(window_res);
   rect.setPosition(0, 0);
+
+  const sf::Glsl::Vec2 left_res((float)left_w, (float)view_h);
+  const sf::Glsl::Vec2 right_res((float)right_w, (float)view_h);
+
+  // Rect that fills a viewport-sized render texture (origin at 0,0)
+  sf::RectangleShape rect_view_left;
+  rect_view_left.setSize(sf::Vector2f((float)left_w, (float)view_h));
+  rect_view_left.setPosition(0, 0);
+
+  sf::RectangleShape rect_view_right;
+  rect_view_right.setSize(sf::Vector2f((float)right_w, (float)view_h));
+  rect_view_right.setPosition(0, 0);
 
   //Create the menus
   Overlays overlays(&font, &font_mono);
@@ -278,6 +307,9 @@ int main(int argc, char *argv[]) {
           } else if (game_mode == CONTROLS || game_mode == LEVELS || game_mode == OPTIONS) {
             game_mode = MAIN_MENU;
             scene.SetExposure(1.0f);
+          } else if (game_mode == CHOOSE_MULTIPLAYER) {
+            game_mode = LEVELS;
+            scene.SetExposure(0.5f);
           } else if (game_mode == SCREEN_SAVER) {
             game_mode = MAIN_MENU;
             scene.SetMode(Scene::INTRO);
@@ -341,6 +373,30 @@ int main(int argc, char *argv[]) {
               scene.GetCurMusic().setVolume(GetVol());
               scene.GetCurMusic().play();
               LockMouse(window);
+            } else if (selected == Overlays::MULTIPLAYER) {
+              game_mode = PLAYING_MULTIPLAYER;
+              menu_music.stop();
+              scene1.StartNewGame();
+              scene2.StartNewGame();
+              
+              // Offset marble positions so they spawn on each side
+              const Eigen::Vector3f base_pos = scene1.GetMarble();
+              const float offset = 8.0f;  // Distance from center
+              scene1.SetMarble(base_pos.x() - offset, base_pos.y(), base_pos.z(), 1.0f);
+              scene2.SetMarble(base_pos.x() + offset, base_pos.y(), base_pos.z(), 1.0f);
+              scene1.GetCurMusic().setVolume(GetVol());
+              scene1.GetCurMusic().play();
+              LockMouse(window);
+
+              // Snap cameras to new marble positions so each view centers correctly
+              scene1.SnapCamera();
+              scene1.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+              scene2.SnapCamera();
+              scene2.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+
+              scene1.GetCurMusic().setVolume(GetVol());
+              scene1.GetCurMusic().play();
+              LockMouse(window);
             } else if (selected == Overlays::CONTROLS) {
               game_mode = CONTROLS;
             } 
@@ -398,18 +454,50 @@ int main(int argc, char *argv[]) {
             } else if (selected >= Overlays::L0 && selected <= Overlays::L14) {
               const int level = selected - Overlays::L0 + overlays.GetLevelPage() * Overlays::LEVELS_PER_PAGE;
               if (high_scores.HasUnlocked(level)) {
-                game_mode = PLAYING;
-                menu_music.stop();
-                scene.SetExposure(1.0f);
-                scene.StartSingle(level);
-                scene.GetCurMusic().setVolume(GetVol());
-                scene.GetCurMusic().play();
-                LockMouse(window);
+                selected_level = level;
+                game_mode = CHOOSE_MULTIPLAYER;
+                scene.SetExposure(0.5f);
               }
             }
           } else if (game_mode == SCREEN_SAVER) {
             scene.SetMode(Scene::INTRO);
             game_mode = MAIN_MENU;
+          } else if (game_mode == CHOOSE_MULTIPLAYER) {
+            const Overlays::Texts selected = overlays.GetOption(Overlays::SINGLE_PLAYER, Overlays::MULTIPLAYER_CHOICE);
+            if (selected == Overlays::SINGLE_PLAYER) {
+              game_mode = PLAYING;
+              menu_music.stop();
+              scene.SetExposure(1.0f);
+              scene.StartSingle(selected_level);
+              scene.GetCurMusic().setVolume(GetVol());
+              scene.GetCurMusic().play();
+              LockMouse(window);
+            } else if (selected == Overlays::MULTIPLAYER_CHOICE) {
+              game_mode = PLAYING_MULTIPLAYER;
+              menu_music.stop();
+              scene1.StartNewGame();
+              scene2.StartNewGame();
+              
+              // Set both scenes to the selected level
+              scene1.SetLevel(selected_level);
+              scene2.SetLevel(selected_level);
+              
+              // Offset marble positions so they spawn on each side
+              const Eigen::Vector3f base_pos = scene1.GetMarble();
+              const float offset = 8.0f;
+              scene1.SetMarble(base_pos.x() - offset, base_pos.y(), base_pos.z(), 1.0f);
+              scene2.SetMarble(base_pos.x() + offset, base_pos.y(), base_pos.z(), 1.0f);
+              
+              // Snap cameras to new marble positions
+              scene1.SnapCamera();
+              scene1.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+              scene2.SnapCamera();
+              scene2.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+              
+              scene1.GetCurMusic().setVolume(GetVol());
+              scene1.GetCurMusic().play();
+              LockMouse(window);
+            }
           } else if (game_mode == PAUSED) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::CONTINUE, Overlays::MOUSE);
             if (selected == Overlays::CONTINUE) {
@@ -473,6 +561,28 @@ int main(int argc, char *argv[]) {
       credits_music.play();
     }
 
+    //Check if either player won in multiplayer mode
+    if (game_mode == PLAYING_MULTIPLAYER) {
+      bool p1_at_goal = (scene1.GetMode() == Scene::FINAL || scene1.GetMode() == Scene::GOAL);
+      bool p2_at_goal = (scene2.GetMode() == Scene::FINAL || scene2.GetMode() == Scene::GOAL);
+      
+      if (p1_at_goal || p2_at_goal) {
+        // One player finished, advance to next level
+        scene1.StartNextLevel();
+        scene2.StartNextLevel();
+
+        // Offset marble positions so they spawn on each side and snap cameras
+        const Eigen::Vector3f base_pos = scene1.GetMarble();
+        const float offset = 8.0f;  // Distance from center
+        scene1.SetMarble(base_pos.x() - offset, base_pos.y(), base_pos.z(), 1.0f);
+        scene2.SetMarble(base_pos.x() + offset, base_pos.y(), base_pos.z(), 1.0f);
+        scene1.SnapCamera();
+        scene1.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+        scene2.SnapCamera();
+        scene2.UpdateCameraOnly(0.0f, 0.0f, 0.0f);
+      }
+    }
+
     //Main game update
     if (game_mode == MAIN_MENU) {
       scene.UpdateCamera();
@@ -486,6 +596,9 @@ int main(int argc, char *argv[]) {
     } else if (game_mode == LEVELS) {
       scene.UpdateCamera();
       overlays.UpdateLevels((float)mouse_pos.x, (float)mouse_pos.y);
+    } else if (game_mode == CHOOSE_MULTIPLAYER) {
+      scene.UpdateCamera();
+      overlays.UpdateChooseMultiplayer((float)mouse_pos.x, (float)mouse_pos.y);
     } else if (game_mode == SCREEN_SAVER) {
       scene.UpdateCamera();
     } else if (game_mode == PLAYING || game_mode == CREDITS || game_mode == MIDPOINT) {
@@ -516,6 +629,50 @@ int main(int argc, char *argv[]) {
       //Apply forces to marble and camera
       scene.UpdateMarble(force_lr, force_ud, force_jump);
       scene.UpdateCamera(cam_lr, cam_ud, cam_z, mouse_clicked);
+    } else if (game_mode == PLAYING_MULTIPLAYER) {
+      //Collect keyboard input for Player 1 (WASD + Mouse)
+      const float p1_force_lr =
+        (all_keys[sf::Keyboard::A] ? -1.0f : 0.0f) +
+        (all_keys[sf::Keyboard::D] ? 1.0f : 0.0f);
+      const float p1_force_ud =
+        (all_keys[sf::Keyboard::S] ? -1.0f : 0.0f) +
+        (all_keys[sf::Keyboard::W] ? 1.0f : 0.0f);
+
+      const float p1_force_jump = 
+        (all_keys[sf::Keyboard::Space] ? 1.0f : 0.0f);
+      //Collect keyboard input for Player 2 (Arrow Keys)
+      const float p2_force_lr =
+        (all_keys[sf::Keyboard::Left] ? -1.0f : 0.0f) +
+        (all_keys[sf::Keyboard::Right] ? 1.0f : 0.0f);
+      const float p2_force_ud =
+        (all_keys[sf::Keyboard::Down] ? -1.0f : 0.0f) +
+        (all_keys[sf::Keyboard::Up] ? 1.0f : 0.0f);
+
+
+      const float p2_force_jump = 
+        (all_keys[sf::Keyboard::Backspace] ? 1.0f : 0.0f);
+
+      //Collect mouse input for Player 1 (center relative to left viewport)
+      const sf::Vector2i left_center((int)left_w / 2, (int)view_h / 2);
+      const sf::Vector2i mouse_delta = mouse_pos - left_center;
+      sf::Mouse::setPosition(left_center, window);
+      float ms = mouse_sensitivity;
+      if (game_settings.mouse_sensitivity == 1) {
+        ms *= 0.5f;
+      } else if (game_settings.mouse_sensitivity == 2) {
+        ms *= 0.25f;
+      }
+      const float cam_lr = float(-mouse_delta.x) * ms;
+      const float cam_ud = float(-mouse_delta.y) * ms;
+      const float cam_z = mouse_wheel * wheel_sensitivity;
+
+      //Apply forces to both marbles
+      scene1.UpdateMarble(p1_force_lr, p1_force_ud, p1_force_jump);
+      scene2.UpdateMarble(p2_force_lr, p2_force_ud, p2_force_jump);
+      
+      //Player 1 camera follows mouse, Player 2 has static camera
+      scene1.UpdateCamera(cam_lr, cam_ud, cam_z, mouse_clicked);
+      scene2.UpdateCamera(0, 0, 0, mouse_clicked);
     } else if (game_mode == PAUSED) {
       overlays.UpdatePaused((float)mouse_pos.x, (float)mouse_pos.y);
     }
@@ -526,27 +683,81 @@ int main(int argc, char *argv[]) {
       lag_ms -= 1000.0f / target_fps;
       skip_frame = true;
     } else {
-      //Update the shader values
-      scene.Write(shader);
+      //Update the shader values based on game mode
+      if (game_mode == PLAYING_MULTIPLAYER) {
+        // per-viewport iResolution is set when rendering each view below
+        scene1.Write(shader);
+      } else {
+        shader.setUniform("iResolution", window_res);
+        scene.Write(shader);
+      }
 
       //Setup full-screen shader
       sf::RenderStates states = sf::RenderStates::Default;
       states.shader = &shader;
 
-      //Draw the fractal
-      if (fullscreen) {
-        //Draw to the render texture
-        renderTexture.draw(rect, states);
-        renderTexture.display();
+      if (game_mode == PLAYING_MULTIPLAYER) {
+        //Draw splitscreen for multiplayer by rendering each scene into its
+        //own offscreen texture (so fragment shader coordinates are local)
 
-        //Draw render texture to main window
-        sf::Sprite sprite(renderTexture.getTexture());
-        sprite.setScale(float(screen_size.width) / float(resolution->width),
-                        float(screen_size.height) / float(resolution->height));
-        window.draw(sprite);
+        //Left viewport
+        shader.setUniform("iResolution", left_res);
+        scene1.Write(shader);
+        renderLeft.setActive(true);
+        renderLeft.clear();
+        renderLeft.draw(rect_view_left, states);
+        renderLeft.display();
+
+        //Right viewport
+        shader.setUniform("iResolution", right_res);
+        scene2.Write(shader);
+        renderRight.setActive(true);
+        renderRight.clear();
+        renderRight.draw(rect_view_right, states);
+        renderRight.display();
+
+        //Composite into main output
+        if (fullscreen) {
+          // Draw left and right into the main renderTexture then scale to window
+          renderTexture.setActive(true);
+          renderTexture.clear();
+          sf::Sprite sprL(renderLeft.getTexture());
+          sprL.setPosition(0, 0);
+          renderTexture.draw(sprL);
+          sf::Sprite sprR(renderRight.getTexture());
+          sprR.setPosition((float)left_w, 0);
+          renderTexture.draw(sprR);
+          renderTexture.display();
+
+          sf::Sprite finalS(renderTexture.getTexture());
+          finalS.setScale(float(screen_size.width) / float(resolution->width),
+                          float(screen_size.height) / float(resolution->height));
+          window.draw(finalS);
+        } else {
+          // Windowed: draw the two textures directly to the window side-by-side
+          sf::Sprite sprL(renderLeft.getTexture());
+          sprL.setPosition(0, 0);
+          window.draw(sprL);
+          sf::Sprite sprR(renderRight.getTexture());
+          sprR.setPosition((float)left_w, 0);
+          window.draw(sprR);
+        }
       } else {
-        //Draw directly to the main window
-        window.draw(rect, states);
+        //Draw single player normally
+        if (fullscreen) {
+          //Draw to the render texture
+          renderTexture.draw(rect, states);
+          renderTexture.display();
+
+          //Draw render texture to main window
+          sf::Sprite sprite(renderTexture.getTexture());
+          sprite.setScale(float(screen_size.width) / float(resolution->width),
+                          float(screen_size.height) / float(resolution->height));
+          window.draw(sprite);
+        } else {
+          //Draw directly to the main window
+          window.draw(rect, states);
+        }
       }
     }
 
@@ -557,6 +768,8 @@ int main(int argc, char *argv[]) {
       overlays.DrawControls(window);
     } else if (game_mode == LEVELS) {
       overlays.DrawLevels(window);
+    } else if (game_mode == CHOOSE_MULTIPLAYER) {
+      overlays.DrawChooseMultiplayer(window);
     } else if (game_mode == OPTIONS){
         overlays.DrawOptions(window); 
     } else if (game_mode == PLAYING) {
