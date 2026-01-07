@@ -5,7 +5,7 @@ TODO:
 Countdown für level beginn bei multiplayer
 Timer für multiplayer
 
-paused bug im option screen 
+Paused background bug 
 
 
 cmake --build build

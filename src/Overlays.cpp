@@ -75,8 +75,8 @@ void Overlays::UpdateMenu(float mouse_x, float mouse_y) {
 
 void Overlays::UpdateControls(float mouse_x, float mouse_y) {
   //Update text boxes
-  MakeText("Roll\nCamera\nZoom\nRestart\nPause", 40, 200, 46, sf::Color::White, all_text[CONTROLS_L]);
-  MakeText("WASD or Arrows\nMouse\nScroll Wheel\nR or Right-Click\nEsc", 280, 200, 46, sf::Color::White, all_text[CONTROLS_R]);
+  MakeText("Roll\nJump\nCamera\nZoom\nRestart\nPause", 40, 200, 46, sf::Color::White, all_text[CONTROLS_L]);
+  MakeText("WASD or Arrows\nSpace or Backspace\nMouse\nScroll Wheel\nR or Right-Click\nEsc", 280, 200, 46, sf::Color::White, all_text[CONTROLS_R]);
   MakeText("Back", 60, 550, 40, sf::Color::White, all_text[BACK]);
 
   //A little extra vertical spacing
@@ -184,7 +184,6 @@ void Overlays::DrawOptions(sf::RenderWindow& window) {
 
   window.draw(all_text[OPTIONS_L]);
   window.draw(all_text[BACK]);
-  window.draw(all_text[PAUSED]); 
   window.draw(all_text[MUSIC]); 
   window.draw(all_text[MOUSE]);
   window.draw(all_text[FULLSCREEN]); 
