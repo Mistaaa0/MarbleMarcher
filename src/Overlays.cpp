@@ -56,7 +56,7 @@ Overlays::Texts Overlays::GetOption(Texts from, Texts to) {
 
 void Overlays::UpdateMenu(float mouse_x, float mouse_y) {
   //Update text boxes
-  MakeText("Mike Oxmall", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
+  MakeText("Marble Marcher", 60, 20, 72, sf::Color::Green, all_text[TITLE]);
 
   MakeText("Play", 80, 160, 60, sf::Color::White, all_text[PLAY]);
   MakeText("Multiplayer", 80, 230, 60, sf::Color::White, all_text[MULTIPLAYER]);
@@ -412,9 +412,9 @@ void Overlays::UpdateHover(Texts from, Texts to, float mouse_x, float mouse_y) {
 
 void Overlays::UpdateChooseMultiplayer(float mouse_x, float mouse_y) {
   //Update text boxes
-  MakeText("Choose Game Mode", 540, 200, 48, sf::Color::White, all_text[TITLE]);
-  MakeText("Single Player", 370, 350, 50, sf::Color::White, all_text[SINGLE_PLAYER]);
-  MakeText("Multiplayer", 750, 350, 50, sf::Color::White, all_text[MULTIPLAYER_CHOICE]);
+  MakeText("Choose Game Mode", 300, 200, 54, sf::Color::White, all_text[TITLE]);
+  MakeText("Single Player", 200, 350, 40, sf::Color::White, all_text[SINGLE_PLAYER]);
+  MakeText("Multiplayer", 750, 350, 40, sf::Color::White, all_text[MULTIPLAYER_CHOICE]);
   
   all_text[TITLE].setLineSpacing(0.76f);
   
@@ -428,4 +428,35 @@ void Overlays::DrawChooseMultiplayer(sf::RenderWindow& window) {
   window.draw(all_text[MULTIPLAYER_CHOICE]);
 }
 
+void Overlays::UpdatePausedMultiplayer(float mouse_x, float mouse_y) {
+  //Update text boxes - same as regular pause
+  MakeText("Paused", 540, 288, 54, sf::Color::White, all_text[PAUSED]);
+  MakeText("Continue", 370, 356, 40, sf::Color::White, all_text[CONTINUE]);
+  MakeText("Restart", 620, 356, 40, sf::Color::White, all_text[RESTART]);
+  MakeText("Quit", 845, 356, 40, sf::Color::White, all_text[QUIT]);
 
+  //Update music setting
+  const char* music_txt = (game_settings.mute ? "Music:  Off" : "Music:  On");
+  MakeText(music_txt, 410, 500, 40, sf::Color::White, all_text[MUSIC]);
+
+  //Update mouse sensitivity setting
+  const char* mouse_txt = "Mouse Sensitivity:  High";
+  if (game_settings.mouse_sensitivity == 1) {
+    mouse_txt = "Mouse Sensitivity:  Medium";
+  } else if (game_settings.mouse_sensitivity == 2) {
+    mouse_txt = "Mouse Sensitivity:  Low";
+  }
+  MakeText(mouse_txt, 410, 550, 40, sf::Color::White, all_text[MOUSE]);
+
+  //Check if mouse intersects anything
+  UpdateHover(CONTINUE, MOUSE, mouse_x, mouse_y);
+}
+
+void Overlays::DrawPausedMultiplayer(sf::RenderWindow& window) {
+  window.draw(all_text[PAUSED]);
+  window.draw(all_text[CONTINUE]);
+  window.draw(all_text[RESTART]);
+  window.draw(all_text[QUIT]);
+  window.draw(all_text[MUSIC]);
+  window.draw(all_text[MOUSE]);
+}

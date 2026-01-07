@@ -45,6 +45,7 @@ static const float mouse_sensitivity = 0.005f;
 static const float wheel_sensitivity = 0.2f;
 static const float music_vol = 75.0f;
 static const float target_fps = 60.0f;
+bool isMulti = false; 
 
 //Game modes
 enum GameMode {
@@ -53,6 +54,7 @@ enum GameMode {
   PLAYING_MULTIPLAYER,
   CHOOSE_MULTIPLAYER,
   PAUSED,
+  PAUSED_MULTIPLAYER,
   SCREEN_SAVER,
   CONTROLS,
   OPTIONS, 
@@ -72,7 +74,7 @@ static int selected_level = 0;  //Track which level was selected for multiplayer
 float GetVol() {
   if (game_settings.mute) {
     return 0.0f;
-  } else if (game_mode == PAUSED) {
+  } else if (game_mode == PAUSED || PAUSED_MULTIPLAYER) {
     return music_vol / 4;
   } else {
     return music_vol;
@@ -318,7 +320,14 @@ int main(int argc, char *argv[]) {
             scene.GetCurMusic().setVolume(GetVol());
             scene.SetExposure(1.0f);
             LockMouse(window);
+          }else if (game_mode == PAUSED_MULTIPLAYER){
+            game_mode = PLAYING_MULTIPLAYER;
+            scene.GetCurMusic().setVolume(GetVol());
+            scene.SetExposure(1.0f);
+            LockMouse(window);
           } else if (game_mode == PLAYING) {
+            PauseGame(window, scene);
+          } else if (game_mode == PLAYING_MULTIPLAYER){
             PauseGame(window, scene);
           }
         } else if (keycode == sf::Keyboard::R) {
@@ -498,7 +507,7 @@ int main(int argc, char *argv[]) {
               scene1.GetCurMusic().play();
               LockMouse(window);
             }
-          } else if (game_mode == PAUSED) {
+          } else if (game_mode == PAUSED ) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::CONTINUE, Overlays::MOUSE);
             if (selected == Overlays::CONTINUE) {
               game_mode = PLAYING;
@@ -671,11 +680,15 @@ int main(int argc, char *argv[]) {
       scene2.UpdateMarble(p2_force_lr, p2_force_ud, p2_force_jump);
       
       //Player 1 camera follows mouse, Player 2 has static camera
-      scene1.UpdateCamera(cam_lr, cam_ud, cam_z, mouse_clicked);
+      //scene1.UpdateCamera(cam_lr, cam_ud, cam_z, mouse_clicked);
+      scene1.UpdateCamera(0, 0, 0, mouse_clicked);
       scene2.UpdateCamera(0, 0, 0, mouse_clicked);
     } else if (game_mode == PAUSED) {
       overlays.UpdatePaused((float)mouse_pos.x, (float)mouse_pos.y);
+    } else if (game_mode == PAUSED_MULTIPLAYER){
+      overlays.UpdatePausedMultiplayer((float)mouse_pos.x, (float)mouse_pos.y);
     }
+
 
     bool skip_frame = false;
     if (lag_ms >= 1000.0f / target_fps) {
@@ -795,7 +808,14 @@ int main(int argc, char *argv[]) {
       if (scene.HasCheats()) {
         overlays.DrawCheatsEnabled(window);
       }
-    } else if (game_mode == CREDITS) {
+    } else if (game_mode == PAUSED_MULTIPLAYER) { 
+      overlays.DrawPausedMultiplayer(window);
+      if (scene.HasCheats()) {
+        overlays.DrawCheatsEnabled(window);
+      }
+    } 
+    
+    else if (game_mode == CREDITS) {
       overlays.DrawCredits(window, scene.IsFullRun(), scene.GetSumTime());
     } else if (game_mode == MIDPOINT) {
       overlays.DrawMidPoint(window, scene.IsFullRun(), scene.GetSumTime());

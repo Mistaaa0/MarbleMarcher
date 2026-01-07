@@ -87,6 +87,7 @@ public:
   void Cheat_Zoom();
   void Cheat_Param(int param);
 
+  // new functions 
   void Cheat_Jump(); 
 
 

@@ -88,6 +88,8 @@ public:
   void DrawCheats(sf::RenderWindow& window);
   void UpdateChooseMultiplayer(float mouse_x, float mouse_y);
   void DrawChooseMultiplayer(sf::RenderWindow& window);
+  void UpdatePausedMultiplayer(float mouse_x, float mouse_y);
+  void DrawPausedMultiplayer(sf::RenderWindow& window);
 
 protected:
   void MakeText(const char* str, float x, float y, float size, const sf::Color& color, sf::Text& text, bool mono=false);
