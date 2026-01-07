@@ -243,6 +243,7 @@ void Overlays::DrawTimer(sf::RenderWindow& window, int t, bool is_high_score) {
   window.draw(text);
 }
 
+// new multiplayer function to draw countdown
 void Overlays::DrawTimerAt(sf::RenderWindow& window, int t, bool is_high_score, float x) {
   sf::Text text;
   if (t < 0) {
@@ -264,11 +265,6 @@ void Overlays::DrawTimerAt(sf::RenderWindow& window, int t, bool is_high_score, 
     if (t == 3*60) {
       sound_go.play();
     }
-  } else {
-    //Create timer text
-    const int score = t - 3 * 60;
-    const sf::Color col = (is_high_score ? sf::Color::Green : sf::Color::White);
-    MakeTime(score, 530, 10, 60, col, text);
   }
 
   if (t < 4*60) {

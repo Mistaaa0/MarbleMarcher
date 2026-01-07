@@ -17,7 +17,7 @@
 #pragma once
 #include <Eigen/Dense>
 
-static const int num_levels = 25;
+static const int num_levels = 30;
 static const int num_fractal_params = 9;
 typedef Eigen::Matrix<float, num_fractal_params, 1> FractalParams;
 

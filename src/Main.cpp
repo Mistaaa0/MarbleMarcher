@@ -617,6 +617,10 @@ int main(int argc, char *argv[]) {
       scene.StopAllMusic();
       scene.SetExposure(0.5f);
       credits_music.play();
+    } else if (scene.GetMode() == Scene::GOAL && game_mode == PLAYING) {
+      // Level completed in single-player, wait for animation to finish
+      // The scene will automatically call StartNextLevel() after 300 frames
+      // and transition back to MARBLE mode to start the next level
     }
 
     //Check if either player won in multiplayer mode

@@ -59,6 +59,10 @@ const Level all_levels[num_levels] = {
     false,                                           //Is Planet
     "Hole In One"),                                  //Description
 
+
+
+    // hier alle neuen extra Levels bis 6
+    // extra level 1 
    Level(
     1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
     Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
@@ -71,6 +75,80 @@ const Level all_levels[num_levels] = {
     -7.0f,                                           //Death Barrier
     false,                                           //Is Planet
     "Ballin"),
+
+
+Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin2"),
+
+
+Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin3"),
+
+
+Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin4"),
+
+
+Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin5"),
+
+Level(
+    1.99f, -1.50f, 1.20f,                            //Scale, Angle1, Angle2
+    Eigen::Vector3f(-3.31f, 6.19f, 1.53f),           //Offset
+    Eigen::Vector3f(0.12f, -0.09f, -0.09f),          //Color
+    0.009f,                                          //Marble Radius
+    1.570796f,                                       //Start Look Direction
+    7.0f,                                            //Orbit Distance
+    Eigen::Vector3f(3.18387f, 6.0f, 0.0f),       //Marble Position
+    Eigen::Vector3f(0.0f, -6.25f, 0.0f),             //Flag Position
+    -7.0f,                                           //Death Barrier
+    false,                                           //Is Planet
+    "Ballin6"),
+
+
+
+
+    // ende extra level 
   //Level 4
   Level(
     1.65f, 0.37f, 5.26f,                             //Scale, Angle1, Angle2

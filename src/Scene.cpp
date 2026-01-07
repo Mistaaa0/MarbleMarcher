@@ -181,8 +181,17 @@ void Scene::StartNewGame() {
 
 void Scene::StartNextLevel() {
   if (play_single) {
-    cam_mode = MARBLE;
-    ResetLevel();
+    // Advance to next level first
+    cur_level++;
+    if (cur_level >= num_levels) {
+      cur_level = num_levels - 1;
+      cam_mode = FINAL;
+    } else {
+      SetLevel(cur_level);
+      HideObjects();
+      cam_mode = MARBLE;
+      ResetLevel();
+    }
   } else if (cur_level + 1 == num_levels_midpoint && cam_mode != MIDPOINT) {
     cam_mode = MIDPOINT;
   } else if (cur_level + 1 >= num_levels) {
