@@ -92,7 +92,11 @@ void UnlockMouse(sf::RenderWindow& window) {
 }
 
 void PauseGame(sf::RenderWindow& window, Scene& scene) {
-  game_mode = PAUSED;
+  if (game_mode == PLAYING_MULTIPLAYER) {
+    game_mode = PAUSED_MULTIPLAYER;
+  } else {
+    game_mode = PAUSED;
+  }
   scene.GetCurMusic().setVolume(GetVol());
   UnlockMouse(window);
   scene.SetExposure(0.5f);
@@ -529,6 +533,35 @@ int main(int argc, char *argv[]) {
               }
               scene.SetMode(Scene::INTRO);
               scene.StopAllMusic();
+              menu_music.setVolume(GetVol());
+              menu_music.play();
+            } else if (selected == Overlays::MUSIC) {
+              game_settings.mute = !game_settings.mute;
+              for (int i = 0; i < num_level_music; ++i) {
+                level_music[i].setVolume(GetVol());
+              }
+            } else if (selected == Overlays::MOUSE) {
+              game_settings.mouse_sensitivity = (game_settings.mouse_sensitivity + 1) % 3;
+            }
+          } else if (game_mode == PAUSED_MULTIPLAYER) {
+            const Overlays::Texts selected = overlays.GetOption(Overlays::CONTINUE, Overlays::MOUSE);
+            if (selected == Overlays::CONTINUE) {
+              game_mode = PLAYING_MULTIPLAYER;
+              scene1.GetCurMusic().setVolume(GetVol());
+              scene1.SetExposure(1.0f);
+              LockMouse(window);
+            } else if (selected == Overlays::RESTART) {
+              game_mode = PLAYING_MULTIPLAYER;
+              scene1.ResetLevel();
+              scene2.ResetLevel();
+              scene1.GetCurMusic().setVolume(GetVol());
+              scene1.SetExposure(1.0f);
+              LockMouse(window);
+            } else if (selected == Overlays::QUIT) {
+              game_mode = MAIN_MENU;
+              scene1.SetExposure(1.0f);
+              scene1.SetMode(Scene::INTRO);
+              scene1.StopAllMusic();
               menu_music.setVolume(GetVol());
               menu_music.play();
             } else if (selected == Overlays::MUSIC) {
