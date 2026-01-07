@@ -6,12 +6,9 @@ kein Pause Screen im Multiplayer
 Countdown für level beginn bei multiplayer
 Timer für multiplayer
 Flaggen Pfeil multiplayer 
-planet crusher tod durch fallen funktioniert nicht 
-
-maus steuert nur linke kamera 
 
 
-level game mode selection ist nicht zentriert 
+
 
 option paused bug :w
 
