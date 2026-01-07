@@ -1,19 +1,7 @@
 # Marble Marcher
 
 
-TODO: 
-Countdown für level beginn bei multiplayer
-Timer für multiplayer
-
-Paused background bug 
-
-
-cmake --build build
-cp build/MarbleMarcher ./
-
-"Weißt du was cool wäre? wenn sich die kugelfarbe mit cheats ändert"
-
-
+TODO: Add new levels
 
 [![Build Status](https://travis-ci.org/jgoldfar/MarbleMarcher.svg?branch=master)](https://travis-ci.org/jgoldfar/MarbleMarcher)
 
