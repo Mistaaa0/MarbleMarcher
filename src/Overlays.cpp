@@ -101,7 +101,7 @@ void Overlays::UpdateOptions(float mouse_x, float mouse_y) {
   }
   MakeText(mouse_txt, 100, 300, 40, sf::Color::White, all_text[MOUSE]);
 
-  const char* FS_txt = (game_settings.fullscreen ? "Fullscreen:  Off" : "Fullscreen:  On");
+  const char* FS_txt = (game_settings.fullscreen ? "Fullscreen:  On" : "Fullscreen:  Off");
   MakeText(FS_txt, 100, 400, 40, sf::Color::White, all_text[FULLSCREEN]);
 
   MakeText("Back", 60, 550, 40, sf::Color::White, all_text[BACK]);

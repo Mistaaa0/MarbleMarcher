@@ -2,21 +2,10 @@
 
 
 TODO: 
-kein Pause Screen im Multiplayer 
 Countdown für level beginn bei multiplayer
 Timer für multiplayer
-Flaggen Pfeil multiplayer 
 
-
-
-
-option paused bug :w
-
-option fullscreen 
-
-
-
-
+paused bug im option screen 
 
 
 cmake --build build

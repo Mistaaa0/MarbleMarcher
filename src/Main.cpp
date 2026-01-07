@@ -447,13 +447,29 @@ int main(int argc, char *argv[]) {
                 }
             } else if (selected == Overlays::FULLSCREEN){
               game_settings.fullscreen = !game_settings.fullscreen;
-              if (game_settings.fullscreen){
-                 screen_size = sf::VideoMode::getDesktopMode();
-                  window_style = sf::Style::Fullscreen;
-            
-                  sf::RenderWindow window(screen_size, "Marble Marcher", window_style, settings);
-                  window.display(); 
+              fullscreen = game_settings.fullscreen;
+              if (fullscreen) {
+                screen_size = sf::VideoMode::getDesktopMode();
+                window_style = sf::Style::Fullscreen;
+              } else {
+                screen_size = sf::VideoMode(resolution->width, resolution->height, 24);
+                window_style = sf::Style::Close;
               }
+              window.close();
+              window.create(screen_size, "Marble Marcher", window_style, settings);
+              window.setVerticalSyncEnabled(true);
+              window.setKeyRepeatEnabled(false);
+              window.requestFocus();
+              if (resolution->width == screen_size.width && resolution->height == screen_size.height) {
+                fullscreen = false;
+              }
+              if (fullscreen) {
+                renderTexture.create(resolution->width, resolution->height, settings);
+                renderTexture.setSmooth(true);
+                renderTexture.setActive(true);
+                window.setActive(false);
+              }
+              overlays.SetScale(float(screen_size.width) / 1280.0f);
             }
           } else if (game_mode == LEVELS) {
             const Overlays::Texts selected = overlays.GetOption(Overlays::L0, Overlays::BACK2);
