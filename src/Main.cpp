@@ -863,7 +863,18 @@ int main(int argc, char *argv[]) {
         overlays.DrawCheatsEnabled(window);
       }
     } 
-    
+    else if (game_mode == PLAYING_MULTIPLAYER) {
+      // Draw countdown timers for each player (left and right halves)
+      if (!scene1.HasCheats() || scene1.GetCountdownTime() < 4 * 60) {
+        overlays.DrawTimerAt(window, scene1.GetCountdownTime(), scene1.IsHighScore(), 320.0f);
+      }
+      if (!scene2.HasCheats() || scene2.GetCountdownTime() < 4 * 60) {
+        overlays.DrawTimerAt(window, scene2.GetCountdownTime(), scene2.IsHighScore(), 960.0f);
+      }
+      if (scene1.HasCheats() || scene2.HasCheats()) {
+        overlays.DrawCheatsEnabled(window);
+      }
+    }
     else if (game_mode == CREDITS) {
       overlays.DrawCredits(window, scene.IsFullRun(), scene.GetSumTime());
     } else if (game_mode == MIDPOINT) {

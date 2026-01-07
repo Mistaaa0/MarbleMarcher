@@ -243,6 +243,52 @@ void Overlays::DrawTimer(sf::RenderWindow& window, int t, bool is_high_score) {
   window.draw(text);
 }
 
+void Overlays::DrawTimerAt(sf::RenderWindow& window, int t, bool is_high_score, float x) {
+  sf::Text text;
+  if (t < 0) {
+    return;
+  } else if (t < 3*60) {
+    //Create text for the number
+    char txt[] = "0";
+    txt[0] = '3' - (t / 60);
+    MakeText(txt, x, 50, 140, sf::Color::White, text);
+
+    //Play count sound if needed
+    if (t % 60 == 0) {
+      sound_count.play();
+    }
+  } else if (t < 4*60) {
+    MakeText("GO!", x, 50, 140, sf::Color::White, text);
+
+    //Play go sound if needed
+    if (t == 3*60) {
+      sound_go.play();
+    }
+  } else {
+    //Create timer text
+    const int score = t - 3 * 60;
+    const sf::Color col = (is_high_score ? sf::Color::Green : sf::Color::White);
+    MakeTime(score, 530, 10, 60, col, text);
+  }
+
+  if (t < 4*60) {
+    //Apply zoom animation
+    const float fpart = float(t % 60) / 60.0f;
+    const float zoom = 0.8f + fpart*0.2f;
+    const sf::Uint8 alpha = sf::Uint8(255.0f*(1.0f - fpart*fpart));
+    text.setScale(sf::Vector2f(zoom, zoom));
+    text.setFillColor(sf::Color(255, 255, 255, alpha));
+    text.setOutlineColor(sf::Color(0, 0, 0, alpha));
+
+    //Center text
+    const sf::FloatRect text_bounds = text.getLocalBounds();
+    text.setOrigin(text_bounds.width / 2, text_bounds.height / 2);
+  }
+
+  //Draw the text
+  window.draw(text);
+}
+
 void Overlays::DrawLevelDesc(sf::RenderWindow& window, int level) {
   sf::Text text;
   MakeText(all_levels[level].txt, 640, 60, 48, sf::Color::White, text);
